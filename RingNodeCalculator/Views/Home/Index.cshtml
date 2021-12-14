@@ -1,0 +1,487 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<br />
+<h5 style="color:orangered;">This Calculator is not made by Ring.Financial or their Team. It is made by a Community Member. I will never ask you for your Wallet Address, Password or Seed Phrase. </h5>
+<h5>Get approximate rewards and days until return on investment. It is not an exact because Ring price fluctuates.</h5>
+<br />
+<div class="row mb-3">
+    <div class="col">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a onclick="getBronzeNode()" class="btn" style="background:tan;">Bronze Node</a>
+            <a onclick="getSilverNode()" class="btn" style="background:silver;">Silver Node</a>
+            <a onclick="getGoldNode()" class="btn" style="background:gold;">Gold Node</a>
+        </div>
+        <labeL class="text-center" style="padding-left:.8em;font-size:20px;" id="current-node">Gold Node Daily Reward</labeL>
+        <labeL class="text-center" style="padding-left:.8em;font-size:20px;color:orangered;" id="node-reward">0.556</labeL>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <div class="form-group">
+            <label for="starting-nodes">Starting Node Amount</label>
+            left    <input type="number" class="form-control" id="starting-nodes" aria-describedby="starting-nodes" placeholder="Enter Starting Node Amount">
+
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-group">
+            <label for="nodes-wanted">Nodes Wanted</label>
+            <input type="number" class="form-control" id="nodes-wanted" aria-describedby="starting-nodes" placeholder="Enter Starting Node Amount">
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-6">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="take-profit" onchange="handleProfitUI()">
+            <label class="form-check-label" for="take-profit">
+                Take Profit Daily
+            </label>
+        </div>
+        <!-- Credit https://stackoverflow.com/a/62581000/14465032 -->
+        <!-- Code was modified -->
+        <!-- Licensed under Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)-->
+        <!-- Licensed under https://creativecommons.org/licenses/by-sa/4.0/ -->
+        <div class="form-group">
+            <label for="profit-percentage" style="color:lightgreen;">Profit in Percent</label>
+            <input disabled type="range" class="form-control-range" id="profit-percentage" onInput="$('#rangeval').html(`${$(this).val()}%`)" value="0">
+            <span id="rangeval">0%</span>
+        </div>
+        <!-- Code end -->
+    </div>
+    <div class="col-6">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="get-ROI" onchange="handleGetROIUI()">
+            <label class="form-check-label" for="get-ROI">
+                Get ROI before buying Nodes?
+            </label>
+        </div>
+        <small id="emailHelp" class="form-text" style="color:lightgreen;">ROI = Return on Investment</small>
+    </div>
+</div>
+<hr class="mt-3" />
+<div class="row">
+    <div class="col-6">
+        <div class="form-group mb-2">
+            <label for="initial-investment">Initial Investment</label>
+            <input type="number" class="form-control" id="initial-investment" aria-describedby="initial-investment" placeholder="Enter Initial Investment">
+        </div>
+        <a onclick="getNodeResults()" class="btn bg-success text-white mt-2">Calculate My Nodes</a>
+    </div>
+    <div class="col-6">
+        <div class="form-group">
+            <label for="ring-price">Estimated Ring Price</label>
+            <input type="number" class="form-control" id="ring-price" aria-describedby="ring-price" placeholder="Enter Estimated Ring price" value="150">
+        </div>
+
+    </div>
+</div>
+<hr />
+<br />
+<div class="row" id="roi-stats">
+    <div class="col">
+        <div class="card">
+            <h5 class="card-header text-black">How Long Until I Get My Return On Investment (ROI) Before Buying/Compounding Nodes</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                <h5 class="card-title text-black">Initial Investment</h5>
+                    </div>
+                    <div class="col">
+                <h5 class="card-title text-black">Daily Ring</h5>
+                    </div>
+                    <div class="col">
+                <h5 class="card-title text-black">Investment Results</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                          <p style="font-size:18px;color:darkorange;" >Starting Nodes = <span id="starting-nodes-stats"></span></p>
+                    </div>
+                    <div class="col">
+                          <p class="text-black">Daily Ring Before Tax = <span id="daily-ring-b4tax-stats"></span></p>
+                    </div>
+                    <div class="col">
+                          <p class="text-black">Total Ring Needed for ROI After Tax = <span id="total-ring-needed-stats"></span> Ring</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                          <p class="text-black">Initial Investment of = <span id="initial-investment-stats"></span></p>
+                    </div>
+                    <div class="col">
+                          <p class="text-black">Daily Ring Tax = <span id="daily-ring-tax-stats"></"></span></p>
+                    </div>
+                    <div class="col">
+                          <p class="text-black">Days until ROI = <span id="days-until-roi-stats"></span></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                          <p class="text-black">Estimated Ring Price = <span id="ring-price-stats"></span></p>
+                    </div>
+                    <div class="col">
+                          <p class="text-black">Daily Ring After Tax = <span id="daily-ring-aftertax-stats"></span></p>
+                    </div>
+                    <div class="col">
+                          <p class="text-black">Final Profit amount before starting to buy more nodes == $<span id="final-profit-stats"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<table class="table table-light">
+    <thead class="sticky-top">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Day</th>
+            <th scope="col">Today's Ring</th>
+            <th scope="col">Ring Taxes</th>
+            <th scope="col">Ring After Taxes</th>
+            <th scope="col">Profit Taken</th>
+            <th scope="col">Total Profit</th>
+            <th scope="col">Ring For Nodes</th>
+            <th scope="col">Nodes Created</th>
+            <th scope="col">Ring Remaining After Creating Nodes</th>
+            <th scope="col">Nodes</th>
+        </tr>
+    </thead>
+    <tbody id="table-body">
+        <tr>
+            <th scope="row">1</th>
+            <td>1</td>
+            <td>0.556</td>
+            <td>0.056</td>
+            <td>0.5</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0.5</td>
+            <td style="color:green;">0</td>
+            <td>0.5</td>
+            <td>1</td>
+        </tr>
+    </tbody>
+</table>
+
+@section Scripts {
+
+<script>
+
+       $(document).ready(function (){
+            $('#roi-stats').hide();
+       });
+
+
+      const bronzeNode = 1;
+      const silverNode = 5;
+      const goldNode = 10;
+      const bronzeReward = 0.042;
+      const silverReward = 0.246;
+      const goldReward = 0.556;
+      const tax = .10;
+
+      let currentRewards = 0;
+      let currentNodes = 0;
+      let totalProfit = 0;
+      let currentDay = 0;
+      let nodeType = "gold";
+
+      function resetInfo(){
+        currentRewards = 0;
+        currentNodes = 0;
+        totalProfit = 0;
+        currentDay = 0;
+      }
+
+      function getBronzeNode(){
+          $('#table-body').empty();
+          $('#current-node').text('Bronze Node Daily Reward');
+          $('#node-reward').text(bronzeReward);
+          nodeType = "bronze";
+          var bronzeTax = bronzeReward * tax;
+          var bronzeAfterTaxes = bronzeReward - bronzeTax;
+                    var html = `
+              <tr>
+              <th scope="row">1</th>
+              <td>1</td>
+              <td>${bronzeReward}</td>
+              <td>${bronzeTax.toFixed(6)}</td>
+              <td>${bronzeAfterTaxes.toFixed(6)}</td>
+              <td>0</td>
+              <td>0</td>
+              <td>${bronzeAfterTaxes.toFixed(6)}</td>
+              <td style="color:green;">0</td>
+              <td>${bronzeAfterTaxes.toFixed(6)}</td>
+              <td>1</td>
+          </tr>
+          `;
+
+          let table = document.getElementById("table-body");
+          table.insertAdjacentHTML("beforeend", html);
+      }
+
+      function getSilverNode(){
+         $('#table-body').empty();
+          $('#current-node').text('Silver Node Daily Reward');
+          $('#node-reward').text(silverReward);
+          nodeType = "silver";
+          var silverTax = silverReward * tax;
+          var silverAfterTaxes = silverReward - silverTax;
+                    var html = `
+              <tr>
+              <th scope="row">1</th>
+              <td>1</td>
+              <td>${silverReward}</td>
+              <td>${silverTax.toFixed(6)}</td>
+              <td>${silverAfterTaxes.toFixed(6)}</td>
+              <td>0</td>
+              <td>0</td>
+              <td>${silverAfterTaxes.toFixed(6)}</td>
+              <td style="color:green;">0</td>
+              <td>${silverAfterTaxes.toFixed(6)}</td>
+              <td>1</td>
+          </tr>
+          `;
+
+          let table = document.getElementById("table-body");
+          table.insertAdjacentHTML("beforeend", html);
+      }
+
+      function getGoldNode(){
+         $('#table-body').empty();
+          $('#current-node').text('Gold Node Daily Reward');
+          $('#node-reward').text(goldReward);
+          nodeType = "gold";
+          var goldTax = goldReward * tax;
+          var goldAfterTaxes = goldReward - goldTax;
+                    var html = `
+              <tr>
+              <th scope="row">1</th>
+              <td>1</td>
+              <td>${goldReward}</td>
+              <td>${goldTax.toFixed(6)}</td>
+              <td>${goldAfterTaxes.toFixed(6)}</td>
+              <td>0</td>
+              <td>0</td>
+              <td>${goldAfterTaxes.toFixed(6)}</td>
+              <td style="color:green;">0</td>
+              <td>${goldAfterTaxes.toFixed(6)}</td>
+              <td>1</td>
+          </tr>
+          `;
+
+          let table = document.getElementById("table-body");
+          table.insertAdjacentHTML("beforeend", html);
+      }
+
+      function handleProfitUI(){
+          var takeProfit = document.getElementById('take-profit');
+          if(takeProfit.checked == true){
+               //$('profit-percentage').removeAttr('disabled');
+                $('#profit-percentage').prop('disabled', false);
+          }else{
+             $('#profit-percentage').prop('disabled', true);
+          }
+      }
+
+      function handleGetROIUI(){
+          var getRoi = document.getElementById('get-ROI');
+          if(getRoi.checked == true){
+             $('#roi-stats').show();
+          }else{
+            $('#roi-stats').hide();
+          }
+      }
+
+      function getCalculatorInfo(){
+          return {
+            startingNodes: parseInt(document.getElementById('starting-nodes').value),
+            nodesWanted: parseInt(document.getElementById('nodes-wanted').value),
+            takeProfit: document.getElementById('take-profit').checked,
+            profitPercentage: parseInt(document.getElementById('profit-percentage').value) / 100,
+            getROI: document.getElementById('get-ROI').checked,
+            initialInvestment: parseInt(document.getElementById('initial-investment').value),
+            ringPrice: parseInt(document.getElementById('ring-price').value),
+        };
+      }
+
+      function getDailyNodeRewards(currentNodes, nodeRewards, percentOfRewards){
+          let _baseRewards = currentNodes * nodeRewards;
+          let _ringTax = _baseRewards * tax;
+          let _rewardsAfterTax = _baseRewards - _ringTax;
+          let _profitTaken = _rewardsAfterTax  * percentOfRewards;
+          let _finalRewards = _rewardsAfterTax - _profitTaken;
+          return {
+                baseRewards: _baseRewards,
+                ringTax: _ringTax,
+                rewardsAfterTax: _rewardsAfterTax,
+                profitTaken: _profitTaken,
+                finalRewards: _finalRewards,
+          };
+      }
+
+      function daysUntilNextNode(percentOfRewards, nodeType){
+        currentNodes =  parseInt(currentNodes);
+        currentDay++;
+        let nodeRewardType = getNodeRewards();
+        let dailyRewards = getDailyNodeRewards(currentNodes, nodeRewardType, percentOfRewards);
+        totalProfit += dailyRewards.profitTaken;
+        currentRewards += dailyRewards.finalRewards;
+        let startingRewards = currentRewards;
+        let nodesToCreate = Math.floor(currentRewards / nodeType);
+        let priceToBuyNodes = nodesToCreate * nodeType;
+        console.log(`Nodes to create ${nodesToCreate}`);
+        console.log(`price to buy nodes ${priceToBuyNodes}`);
+        console.log(`current rewards ${currentRewards}`);
+        if(nodesToCreate > 0){
+          currentRewards -= priceToBuyNodes;
+        }
+        let nodesCreatedToday = nodesToCreate;
+        console.log(`current rewards ${currentRewards}`);
+
+        currentNodes += nodesCreatedToday;
+         updateTable(currentDay, startingRewards, nodesCreatedToday, dailyRewards);
+
+          return currentDay;
+      }
+
+      function updateTable(day, startingRewards, nodesCreatedToday, dailyRewards){
+          var html = `
+              <tr>
+              <th scope="row">${day}</th>
+              <td>${day}</td>
+              <td>${dailyRewards.baseRewards.toFixed(6)}</td>
+              <td>${dailyRewards.ringTax.toFixed(6)}</td>
+              <td>${dailyRewards.finalRewards.toFixed(6)}</td>
+              <td>${dailyRewards.profitTaken.toFixed(6)}</td>
+              <td>${totalProfit.toFixed(6)}</td>
+              <td>${startingRewards.toFixed(6)}</td>
+              <td style="color:green;">${nodesCreatedToday}</td>
+              <td>${currentRewards.toFixed(6)}</td>
+              <td>${currentNodes}</td>
+          </tr>
+
+          `;
+
+          let table = document.getElementById("table-body");
+          table.insertAdjacentHTML("beforeend", html);
+      }
+
+
+      function getInitialInvestmentBeforeBuyingNodes(startingNodes, initialInvestment, ringPrice, rewardType){
+          let dailyRing = startingNodes * rewardType;
+          let ringTax = dailyRing * tax;
+          let finalDailyRing = dailyRing - ringTax;
+          let profit = 0;
+          let totalRing = 0;
+          let days = 0;
+          console.log(`Starting Nodes = ${startingNodes}`);
+          $('#starting-nodes-stats').text(`${startingNodes}`);
+          console.log(`Initial Investment of = $${initialInvestment}`);
+          $('#initial-investment-stats').text(`$${initialInvestment}`);
+          console.log(`Estimated Ring Price = $${ringPrice}`);
+          $('#ring-price-stats').text(`$${ringPrice}`);
+          console.log(`Daily Ring Before Tax = ${dailyRing} Ring === ${(dailyRing * ringPrice).toFixed(3)}`);
+          $('#daily-ring-b4tax-stats').text(`${dailyRing} Ring === $${(dailyRing * ringPrice).toFixed(2)}`);
+          console.log(`Daily Ring Tax = ${ringTax.toFixed(3)} Ring === $${ringTax * ringPrice}`);
+          $('#daily-ring-tax-stats').text(`${ringTax.toFixed(3)} Ring === $${(ringTax * ringPrice).toFixed(2)}`);
+          console.log(`Daily Ring After Tax = ${finalDailyRing} Ring === $${finalDailyRing * ringPrice}`);
+          $('#daily-ring-aftertax-stats').text(`${finalDailyRing.toFixed(3)} Ring === $${(finalDailyRing * ringPrice).toFixed(2)}`);
+
+          while(profit <= initialInvestment){
+              totalRing += finalDailyRing;
+              profit += finalDailyRing * ringPrice;
+              days++;
+          }
+            console.log(`Total Ring Needed for ROI After Tax = ${totalRing} Ring`);
+           $('#total-ring-needed-stats').text(`${totalRing.toFixed(3)}`);
+
+            console.log(`Days until ROI = ${days}`);
+           $('#days-until-roi-stats').text(`${days}`);
+
+           console.log(`Final Profit amount before starting to buy more nodes == $${profit}`);
+           $('#final-profit-stats').text(`${profit.toFixed(2)}`);
+      }
+
+      function getNodeRewards(){
+          if(nodeType == "bronze"){
+              return bronzeReward;
+          }
+          if(nodeType == "silver"){
+              return silverReward;
+          }
+          if(nodeType == "gold"){
+              return goldReward;
+          }
+      }
+
+      function getNodeType(){
+          if(nodeType == "bronze"){
+              return bronzeNode;
+          }
+          if(nodeType == "silver"){
+              return silverNode;
+          }
+          if(nodeType == "gold"){
+              return goldNode;
+          }
+      }
+
+      function compoundNodes(startingNodes, nodesWanted, percentOfRewards, initialInvestment, getROIBeforeBuyingNodes, ringPrice){
+          let node = getNodeType();
+          let nodesNeeded = nodesWanted - startingNodes;
+          let totalCostForNodes = node * nodesNeeded;
+          let ringTax = totalCostForNodes * tax;
+          let totalNodes = startingNodes;
+          let totalDays = 0;
+          currentNodes = startingNodes;
+          let nodeInfo = getCalculatorInfo();
+
+          if(nodeInfo.takeProfit == false){
+              let profitPercent = document.getElementById('profit-percentage');
+              profitPercent.value = 0;
+              $('#rangeval').html(`${profitPercent.value}%`)
+          }
+
+          while(totalNodes <= nodesWanted){
+              if(totalNodes >= nodesWanted){
+                  break;
+              }
+               console.log(`total nodes ${totalNodes}`);
+               console.log(`total days ${currentDay}`);
+               console.log("--------------------------------");
+              let days = daysUntilNextNode(percentOfRewards, node);
+              totalNodes = currentNodes;
+              totalDays++;
+          }
+          console.log(`Total Days Until ${nodesWanted} Nodes = ${totalDays}`);
+      }
+
+      function getROIResults(){
+
+      }
+
+      function getNodeResults(){
+          resetInfo();
+          $('#table-body').empty();
+          let nodeInfo = getCalculatorInfo();
+
+          compoundNodes(nodeInfo.startingNodes, nodeInfo.nodesWanted, nodeInfo.profitPercentage,
+          nodeInfo.initialInvestment, nodeInfo.getROI, nodeInfo.ringPrice);
+          let nodeRewardType = getNodeRewards();
+
+          if(nodeInfo.getROI == true){
+              getInitialInvestmentBeforeBuyingNodes(nodeInfo.startingNodes,
+              nodeInfo.initialInvestment, nodeInfo.ringPrice, nodeRewardType);
+          }
+
+      }
+
+</script>
+
+}

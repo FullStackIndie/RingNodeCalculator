@@ -1,0 +1,64 @@
+name: Build, Publish to S3, Deploy to AWS EC2
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+ continuous-integration:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-west-1
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore
+      
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: dotnet publish -c Release
+
+    - name: Copy AppSpec.yml To Root Folder
+      run: cp /home/runner/work/RingNodeCalculator/RingNodeCalculator/appspec.yml /home/runner/work/RingNodeCalculator/RingNodeCalculator/RingNodeCalculator/bin/Release/net5.0/publish/
+    - name: Copy beforeinstall script To Root Folder
+      run: cp /home/runner/work/RingNodeCalculator/RingNodeCalculator/before-install.ps1 /home/runner/work/RingNodeCalculator/RingNodeCalculator/RingNodeCalculator/bin/Release/net5.0/publish/
+    - name: Copy beforeinstall script To Root Folder
+      run: cp /home/runner/work/RingNodeCalculator/RingNodeCalculator/after-install.ps1 /home/runner/work/RingNodeCalculator/RingNodeCalculator/RingNodeCalculator/bin/Release/net5.0/publish/
+    
+    - name: Push Published Content To CodeDeploy
+      run: 
+       aws deploy push
+          --application-name RingNodeCalculator
+          --s3-location s3://ringnodecalculator/ringnodecalculator.zip
+          --source /home/runner/work/RingNodeCalculator/RingNodeCalculator/RingNodeCalculator/bin/Release/net5.0/publish/
+      
+ continuous-deployment:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-west-1
+    needs: [continuous-integration]
+    if: github.ref == 'refs/heads/main'
+    steps:
+     # Step 1
+      - name: Create CodeDeploy Deployment
+        run: 
+         aws deploy create-deployment
+            --application-name RingNodeCalculator
+            --deployment-group-name RingNodeCalculator
+            --deployment-config-name CodeDeployDefault.OneAtATime
+            --s3-location bucket=ringnodecalculator,bundleType=zip,key=ringnodecalculator.zip
