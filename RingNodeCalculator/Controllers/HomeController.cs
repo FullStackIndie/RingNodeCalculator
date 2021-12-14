@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RingNodeCalculator.Enums;
+using Microsoft.Extensions.Logging;
 using RingNodeCalculator.Models;
-using RingNodeCalculator.Services;
 using System.Diagnostics;
 
 namespace RingNodeCalculator.Controllers
@@ -9,13 +8,10 @@ namespace RingNodeCalculator.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly CalculatorService _calculatorService;
 
-        public HomeController(ILogger<HomeController> logger, 
-            CalculatorService calculatorService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _calculatorService = calculatorService;
         }
 
         public IActionResult Index()
