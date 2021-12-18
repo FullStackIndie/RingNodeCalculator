@@ -7,11 +7,9 @@
 <br />
 <div class="row mb-3">
     <div class="col">
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <a onclick="getBronzeNode()" class="btn" style="background:tan;">Bronze Node</a>
-            <a onclick="getSilverNode()" class="btn" style="background:silver;">Silver Node</a>
-            <a onclick="getGoldNode()" class="btn" style="background:gold;">Gold Node</a>
-        </div>
+            <a onclick="getBronzeNode()" class="btn" style="background:tan;color:black;font-weight:bold;">Bronze Node</a>
+            <a onclick="getSilverNode()" class="btn" style="background:silver;color:black;font-weight:bold;">Silver Node</a>
+            <a onclick="getGoldNode()" class="btn" style="background:gold;color:black;font-weight:bold;">Gold Node</a>
         <labeL class="text-center" style="padding-left:.8em;font-size:20px;" id="current-node">Gold Node Daily Reward</labeL>
         <labeL class="text-center" style="padding-left:.8em;font-size:20px;color:orangered;" id="node-reward">0.556</labeL>
     </div>
@@ -136,13 +134,13 @@
 </div>
 <br />
 <table class="table table-light">
-    <thead class="sticky-top">
+    <thead class="sticky-top box-shadow" style="background:white;">
         <tr>
             <th scope="col">#</th>
             <th scope="col">Day</th>
             <th scope="col">Today's Ring</th>
             <th scope="col">Ring Taxes</th>
-            <th scope="col">Ring After Taxes</th>
+            <th scope="col">Ring After Taxes & Profit</th>
             <th scope="col">Profit Taken</th>
             <th scope="col">Total Profit</th>
             <th scope="col">Ring For Nodes</th>
@@ -210,13 +208,13 @@
               <th scope="row">1</th>
               <td>1</td>
               <td>${bronzeReward}</td>
-              <td>${bronzeTax.toFixed(6)}</td>
-              <td>${bronzeAfterTaxes.toFixed(6)}</td>
+              <td>${bronzeTax.toFixed(3)}</td>
+              <td>${bronzeAfterTaxes.toFixed(3)}</td>
               <td>0</td>
               <td>0</td>
-              <td>${bronzeAfterTaxes.toFixed(6)}</td>
+              <td>${bronzeAfterTaxes.toFixed(3)}</td>
               <td style="color:green;">0</td>
-              <td>${bronzeAfterTaxes.toFixed(6)}</td>
+              <td>${bronzeAfterTaxes.toFixed(3)}</td>
               <td>1</td>
           </tr>
           `;
@@ -237,13 +235,13 @@
               <th scope="row">1</th>
               <td>1</td>
               <td>${silverReward}</td>
-              <td>${silverTax.toFixed(6)}</td>
-              <td>${silverAfterTaxes.toFixed(6)}</td>
+              <td>${silverTax.toFixed(3)}</td>
+              <td>${silverAfterTaxes.toFixed(3)}</td>
               <td>0</td>
               <td>0</td>
-              <td>${silverAfterTaxes.toFixed(6)}</td>
+              <td>${silverAfterTaxes.toFixed(3)}</td>
               <td style="color:green;">0</td>
-              <td>${silverAfterTaxes.toFixed(6)}</td>
+              <td>${silverAfterTaxes.toFixed(3)}</td>
               <td>1</td>
           </tr>
           `;
@@ -264,13 +262,13 @@
               <th scope="row">1</th>
               <td>1</td>
               <td>${goldReward}</td>
-              <td>${goldTax.toFixed(6)}</td>
-              <td>${goldAfterTaxes.toFixed(6)}</td>
+              <td>${goldTax.toFixed(3)}</td>
+              <td>${goldAfterTaxes.toFixed(3)}</td>
               <td>0</td>
               <td>0</td>
-              <td>${goldAfterTaxes.toFixed(6)}</td>
+              <td>${goldAfterTaxes.toFixed(3)}</td>
               <td style="color:green;">0</td>
-              <td>${goldAfterTaxes.toFixed(6)}</td>
+              <td>${goldAfterTaxes.toFixed(3)}</td>
               <td>1</td>
           </tr>
           `;
@@ -355,14 +353,14 @@
               <tr>
               <th scope="row">${day}</th>
               <td>${day}</td>
-              <td>${dailyRewards.baseRewards.toFixed(6)}</td>
-              <td>${dailyRewards.ringTax.toFixed(6)}</td>
-              <td>${dailyRewards.finalRewards.toFixed(6)}</td>
-              <td>${dailyRewards.profitTaken.toFixed(6)}</td>
-              <td>${totalProfit.toFixed(6)}</td>
-              <td>${startingRewards.toFixed(6)}</td>
+              <td>${dailyRewards.baseRewards.toFixed(3)}</td>
+              <td>${dailyRewards.ringTax.toFixed(3)}</td>
+              <td>${dailyRewards.finalRewards.toFixed(3)}</td>
+              <td>${dailyRewards.profitTaken.toFixed(3)}</td>
+              <td>${totalProfit.toFixed(3)}</td>
+              <td>${startingRewards.toFixed(3)}</td>
               <td style="color:green;">${nodesCreatedToday}</td>
-              <td>${currentRewards.toFixed(6)}</td>
+              <td>${currentRewards.toFixed(3)}</td>
               <td>${currentNodes}</td>
           </tr>
 
